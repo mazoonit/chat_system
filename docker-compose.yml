@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - mysql_data_vol:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Strong@1234 # to be replaced
+      MYSQL_DATABASE: chat_system
+    ports:
+      - "3306:3306"
+
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: Strong@1234
+      DATABASE_DEV_NAME: chat_system
+
+volumes:
+  mysql_data_vol:

@@ -1,12 +1,15 @@
 source "https://rubygems.org"
 
-ruby "3.0.6"
+ruby "3.0.7"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.3", ">= 7.1.3.4"
 
 # Use mysql as the database for Active Record
-gem "sqlite3"
+gem "mysql2"
+
+# UUID binary for mysql
+gem 'mysql-binuuid-rails'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"

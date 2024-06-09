@@ -41,16 +41,57 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
 
+  chats_consumer:
+    build: .
+    command: 'rails consumers:chats_consumer'
+    volumes:
+      - .:/myapp
+    restart: on-failure
+    depends_on:
+      - db
+      - redis
+      - elasticsearch
+      - rabbitmq
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: Strong@1234
+      DATABASE_DEV_NAME: chat_system
+      REDIS_URL: redis://redis:6379/1
+      ELASTICSEARCH_URL: elasticsearch:9200
+
+  messages_consumer:
+    build: .
+    command: 'rails consumers:messages_consumer'
+    volumes:
+      - .:/myapp
+    restart: on-failure
+    depends_on:
+      - db
+      - redis
+      - elasticsearch
+      - rabbitmq
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: Strong@1234
+      DATABASE_DEV_NAME: chat_system
+      REDIS_URL: redis://redis:6379/1
+      ELASTICSEARCH_URL: elasticsearch:9200
+    
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.piStrongd && bundle exec whenever --update-crontab --set environment=development & bundle exec rails s -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.piStrongd && bundle exec whenever --update-crontab --set environment=development & cron & bundle exec rails s -b '0.0.0.0'"
     volumes:
       - .:/myapp
     ports:
       - "3000:3000"
+    restart: on-failure
     depends_on:
       - db
       - redis
+      - elasticsearch
+      - rabbitmq
     environment:
       DATABASE_HOST: db
       DATABASE_USERNAME: root

@@ -7,9 +7,11 @@
 #
 # set :output, "/path/to/my/cron_log.log"
 #
-set :environment, ENV["RAILS_ENV"]
+set :environment, 'development'
+set :output, "#{path}/log/cron.log"
+ENV.each { |k, v| env(k, v) }
 
-every '1 * * * *' do
+every '* * * * *' do
     rake "update_counters"
 end
 #

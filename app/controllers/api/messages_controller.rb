@@ -25,9 +25,6 @@ class Api::MessagesController < ApplicationController
         end
 
         new_message = Message.new(number: new_message_number, body: params[:body], chat_id: @chat_id)
-        puts @chat_id
-        puts @application_id
-        puts new_message
 
         Publisher.publish(queue_name: "messages", payload: new_message.to_json)
 
@@ -50,6 +47,7 @@ class Api::MessagesController < ApplicationController
     def destroy
         message = Message.find_by!(chat_id: @chat_id, number: params[:message_number])
         message.destroy
+        $redis.sadd("updated_chats", @chat_id)
         # take care of the case that someone deletes message before It's even in the db.
         head :ok 
     rescue ActiveRecord::RecordNotFound

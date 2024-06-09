@@ -29,6 +29,9 @@ gem 'bunny'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 
+#whenever fron cronjobs
+gem 'whenever'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 

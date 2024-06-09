@@ -1,6 +1,6 @@
 FROM ruby:3.0-bullseye as base
 
-RUN apt-get update -qq && apt-get install -y build-essential apt-utils libpq-dev nodejs
+RUN apt-get update -qq && apt-get install -y build-essential apt-utils libpq-dev nodejs cron
 
 WORKDIR /docker/app
 

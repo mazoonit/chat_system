@@ -35,6 +35,8 @@ class Api::ChatsController < ApplicationController
         chat.destroy
         # make sure to empty the redis count
         $redis.del("#{params[:token]}_#{params[:number]}_messages_count")
+        $redis.sadd("updated_applications", @application_id)
+
         head :ok 
     rescue ActiveRecord::RecordNotFound
         render json: { error: "Resource not found" }, status: :not_found

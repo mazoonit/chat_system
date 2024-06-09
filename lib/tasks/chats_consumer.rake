@@ -13,6 +13,7 @@ namespace :consumers do
             queue.subscribe(manual_ack: true, block: true) do |delivery_info, properties, body|
             chat = JSON.parse(body, object_class: Chat)
             if chat.save
+                $redis.sadd("updated_applications", chat.application_id)
                 channel.ack(delivery_info.delivery_tag)
                 puts " [x] Consumed #{body}"
             end

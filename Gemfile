@@ -25,6 +25,10 @@ gem 'redlock'
 # bunny for rabbitmq
 gem 'bunny'
 
+#elasticsearch
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 

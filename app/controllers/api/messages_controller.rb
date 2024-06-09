@@ -2,7 +2,11 @@ class Api::MessagesController < ApplicationController
     before_action :set_chat
     EXCEPT = ['id', 'application_id', 'chat_id']
     def index
-        messages = Message.where(chat_id: @chat_id)
+        if params[:query].present?
+            messages = Message.where(chat_id: @chat_id).search(params[:query], @chat_id)
+        else
+            messages = Message.where(chat_id: @chat_id)
+        end      
         render json: messages.as_json(except: EXCEPT)
     end
 

@@ -1,13 +1,13 @@
 class Api::ChatsController < ApplicationController
     before_action :set_application
-    EXCEPT = ['id']
+    EXCEPT = ['id', 'application_id']
     def index
         chats = Chat.where(application_id: @application_id)
         render json: chats.as_json(except: EXCEPT)
     end
 
     def show
-        chat = Chat.find_by!(application_id: @application_id, chat_number: params[:chat_number])
+        chat = Chat.find_by!(application_id: @application_id, number: params[:number])
         render json: chat.as_json(except: EXCEPT)
     rescue ActiveRecord::RecordNotFound
         render json: { error: "Resource not found" }, status: :not_found
@@ -30,19 +30,11 @@ class Api::ChatsController < ApplicationController
         render json: { error: "Internal Server Error." }, status: :internal_server_error
     end
 
-    def update
-        app = Application.find_by!(token: params[:token])
-        app.name = params[:name]
-        if app.save!
-            render json: app.as_json(except: EXCEPT)
-        else
-            render json: app.errors, status: :unprocessable_entity
-        end
-    end
-
     def destroy
-        app = Application.find_by!(token: params[:token])
-        app.destroy
+        chat = Chat.find_by!(application_id: @application_id, number: params[:number])
+        chat.destroy
+        # make sure to empty the redis count
+        $redis.del("#{params[:token]}_#{params[:number]}_messages_count")
         head :ok 
     rescue ActiveRecord::RecordNotFound
         render json: { error: "Resource not found" }, status: :not_found

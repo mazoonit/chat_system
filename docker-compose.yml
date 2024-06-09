@@ -11,6 +11,14 @@ services:
     ports:
       - "3306:3306"
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+
   web:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
@@ -20,11 +28,14 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - redis
     environment:
       DATABASE_HOST: db
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: Strong@1234
       DATABASE_DEV_NAME: chat_system
+      REDIS_URL: redis://redis:6379/1
 
 volumes:
   mysql_data_vol:
+  redis_data:

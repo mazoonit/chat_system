@@ -18,6 +18,17 @@ services:
     volumes:
       - redis_data:/data
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"  # RabbitMQ default port
+      - "15672:15672"  # RabbitMQ management UI port
+    volumes:
+      - rabbitmq_dataa:/var/lib/rabbitmq  # Persist RabbitMQ data
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: Guest1234  # To be replaced
+
 
   web:
     build: .
@@ -39,3 +50,4 @@ services:
 volumes:
   mysql_data_vol:
   redis_data:
+  rabbitmq_dataa:

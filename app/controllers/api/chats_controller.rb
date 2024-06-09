@@ -15,23 +15,19 @@ class Api::ChatsController < ApplicationController
 
     def create
         new_chat_number = ApplicationService.get_new_chat_number(@application_id, params[:application_token]).to_i
-        puts new_chat_number
-        '''
         if !new_chat_number
-            render json: { error: "Internal Server Error." }, status: :internal_server_error
+            render json: { error: "No chat number?" }, status: :internal_server_error
             return
         end
-        puts new_chat_number
 
-        #new_chat = Chat.new(chat_number: new_chat_number, application_id: @application_id)
+        new_chat = Chat.new(number: new_chat_number, application_id: @application_id)
 
-        # publish to queue
-        puts "hellooooo"
-        render plain: new_chat_number
-        '''
+        Publisher.publish(queue_name: "chats", payload: new_chat.to_json)
+
         render json: new_chat_number
-    rescue
-        
+    rescue => e
+        puts e
+        render json: { error: "Internal Server Error." }, status: :internal_server_error
     end
 
     def update

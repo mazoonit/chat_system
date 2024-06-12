@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_06_08_214048) do
-  create_table "applications", force: :cascade do |t|
+  create_table "applications", force: :cascade, options:“ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci” do |t|
     t.binary "token", limit: 16, null: false
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_08_214048) do
     t.index ["token"], name: "application_token_index", unique: true
   end
 
-  create_table "chats", force: :cascade do |t|
+  create_table "chats", force: :cascade, options:“ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci” do |t|
     t.integer "number", null: false
     t.integer "application_id", null: false
     t.datetime "created_at", null: false
@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_08_214048) do
     t.index ["application_id", "number"], name: "application_id_and_chat_number_index"
   end
 
-  create_table "messages", force: :cascade do |t|
+  create_table "messages", force: :cascade, options:“ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci” do |t|
     t.integer "number", null: false
     t.integer "chat_id", null: false
     t.text "body", null: false

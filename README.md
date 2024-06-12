@@ -4,7 +4,7 @@
 - Open your terminal/cmd.
 - Run `docker-compose run web rake db:migrate`
 - RUN `docker-compose up --build`
-- You can access It from `http://localhost:3000` from `postman`,`insomnia`, `browser`, ... etc
+- You can access It from `http://localhost:3000` through `postman`,`insomnia`, `browser`, ... etc
 
 ### Solution Overview
 #### Design

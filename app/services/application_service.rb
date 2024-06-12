@@ -23,11 +23,11 @@ class ApplicationService
                 $redlock.lock!("#{key}_lock", 2000) do
                     chats_inqueue_max_number = $redis.get(key).to_i # Try to get the key one more time inside the lock, just in case we were waiting another instance.
                     chats_db_max_number = Chat.where(application_id: application_id).maximum(:number).to_i
-
-                    # Since, we can't rely on db's max If there's data already is in the queue.
-                    # I made sure that redis data is presistant not volatile.
-                    # so in theory there's no way to have data in queue not logged in redis.
-
+                    '''
+                     Since we can not rely on mysql, getting the (chat max number)
+                     Because there might be newly inserted chats into the queue but not into mysql yet
+                     So, I decided to carefully use redis presistance feature without decreasing performance drasitcally
+                    '''
                     new_chat_number = [chats_inqueue_max_number, chats_db_max_number].max + 1
                     
                     $redis.set(key, new_chat_number)

@@ -1,9 +1,8 @@
 # Chat_System @instabug
 ### How to run the project ? (Please stick to the commands order.)
 - Install [`docker, docker-compose`](https://docs.docker.com/compose/install/).
-- Open your terminal/cmd.
-- RUN `docker-compose up --build`
-- Run `docker-compose run web rake db:migrate`
+- Open your terminal/cmd and RUN `docker-compose up --build`
+- Open another terminal/cmd tab and Run `docker-compose run web rake db:migrate`
 - You can access It from `http://localhost:3000` through `postman`,`insomnia`, `browser`, ... etc (You can find endpoints table [here](#Endpoints))
 
 ### Solution Overview

@@ -13,14 +13,13 @@ class Api::MessagesController < ApplicationController
     def show
         message = Message.find_by!(chat_id: @chat_id, number: params[:message_number])
         render json: message.as_json(except: EXCEPT)
-    rescue ActiveRecord::RecordNotFound
-        render json: { error: "Resource not found" }, status: :not_found
     end
 
     def create
         new_message_number = ChatService.get_new_message_number(params[:application_token], @application_id, @chat_id).to_i
         if !new_message_number
-            render json: { error: "Internal Server Error!" }, status: :internal_server_error
+            logger.error("Failed to assign chat number")
+            render json: { error: "Internal Server Error." }, status: :internal_server_error
             return
         end
 
@@ -29,9 +28,6 @@ class Api::MessagesController < ApplicationController
         Publisher.publish(queue_name: "messages", payload: new_message.to_json)
 
         render json: new_message_number
-    rescue => e
-        puts e
-        render json: { error: "Internal Server Error." }, status: :internal_server_error
     end
 
     def update
@@ -39,21 +35,13 @@ class Api::MessagesController < ApplicationController
         message.body = params[:body]
         message.save!
         render json: message.as_json(except: EXCEPT)
-    rescue => e
-        puts e
-        render json: { error: "Internal Server Error." }, status: :internal_server_error
     end
 
     def destroy
         message = Message.find_by!(chat_id: @chat_id, number: params[:message_number])
         message.destroy
         $redis.sadd("updated_chats", @chat_id)
-        # take care of the case that someone deletes message before It's even in the db.
         head :ok 
-    rescue ActiveRecord::RecordNotFound
-        render json: { error: "Resource not found" }, status: :not_found
-    rescue
-        render json: { error: "Internal Server Error." }, status: :internal_server_error
     end
 
     private
@@ -62,8 +50,5 @@ class Api::MessagesController < ApplicationController
         @application_id = ApplicationService.get_application_id_by_token(params[:application_token])
         @chat_id = ChatService.get_chat_id(params[:application_token], @application_id, params[:chat_number])
         render json: { error: "Resource not found" }, status: :not_found if !@application_id
-    rescue => e
-        puts e
-        render json: { error: "Internal Server Error." }, status: :internal_server_error
     end
 end

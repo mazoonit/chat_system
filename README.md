@@ -1,4 +1,4 @@
-# CHAT_SYSTEM @instabug
+# Chat_System @instabug
 ### How to run the project ?
 - Install [`docker, docker-compose`](https://docs.docker.com/compose/install/).
 - Open your terminal/cmd.
@@ -8,8 +8,11 @@
 ### Solution Overview
 #### Design
 ![Screenshot from 2024-06-12 07-54-51](https://github.com/mazoonit/chat_system/assets/29822073/de24d334-bfb4-4a5f-a5d7-c803e36e6068)
-- I'm making use of the presistance option in `redis`, because I can't rely on db only to decide the count.
 
+#### Handling Concurrency, and redis presistance trade-offs.
+![image](https://github.com/mazoonit/chat_system/assets/29822073/a9982a8b-869a-4284-8c0b-9fbd04d1e6ce)
+- Since We can't rely on mysql getting the chat's max number If there's no data in redis (Because there might be some newly inserted chats in the queue and not inserted into mysql yet) so, I decided to carefully use redis's presistance feature without decreasing the performance drastically.
+- 
 #### Application Token Storage Optimization
 - I generated a uuid token using `SecureRandom` in rails.
 - Then used `mysql-binuuid-rails` Gem to store the uuid token as binary value in mysql.

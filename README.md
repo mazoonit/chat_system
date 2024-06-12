@@ -8,7 +8,7 @@
 ### Solution Overview
 #### Design
 ![Screenshot from 2024-06-12 07-54-51](https://github.com/mazoonit/chat_system/assets/29822073/de24d334-bfb4-4a5f-a5d7-c803e36e6068)
-- I'm making use of the presistance option in redis, because I can't rely on db only to decide the count.
+- I'm making use of the presistance option in `redis`, because I can't rely on db only to decide the count.
 
 #### Application Token Storage Optimization
 - I generated a uuid token using `SecureRandom` in rails.
@@ -21,7 +21,7 @@
 #### Endpoints
 | Method | URL                                                                              | Body                                                 | Description                                                                                                                                                     |
 |--------|----------------------------------------------------------------------------------|------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| GET    | /api/applications?page=1&amp;amp;limit=10                                        | None                                                 | Retreive all applications, page and limit defaults are (1,10).                                                                                                  |
+| GET    | /api/applications?page=1&limit=10                                        | None                                                 | Retreive all applications, page and limit defaults are (1,10).                                                                                                  |
 | GET    | /api/applications/:application_token                                             | None                                                 | Get single application by token.                                                                                                                                |
 | POST   | /api/applications/:application_token                                             | { "name": xxx }                                      | Create application.                                                                                                                                             |
 | PUT    | /api/applications/:application_token                                             | { "token": xxx, "name": xxx }                        | Update application.                                                                                                                                             |

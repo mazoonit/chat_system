@@ -1,6 +1,6 @@
 class Api::MessagesController < ApplicationController
     before_action :set_chat
-    EXCEPT = ['id', 'application_id', 'chat_id']
+    EXCEPT = ['id', 'application_id', 'chat_id', 'created_at', 'updated_at']
     def index
         if params[:query].present?
             messages = Message.where(chat_id: @chat_id).search(params[:query], @chat_id).page(params[:page] || 1).per(params[:limit] || 10)

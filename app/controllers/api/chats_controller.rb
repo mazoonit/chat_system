@@ -1,6 +1,6 @@
 class Api::ChatsController < ApplicationController
     before_action :set_application
-    EXCEPT = ['id', 'application_id']
+    EXCEPT = ['id', 'application_id', 'created_at', 'updated_at']
 
     def index
         chats = Chat.where(application_id: @application_id).page(params[:page] || 1).per(params[:limit] || 10)

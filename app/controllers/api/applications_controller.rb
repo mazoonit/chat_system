@@ -1,5 +1,6 @@
 class Api::ApplicationsController < ApplicationController
     EXCEPT = ['id', 'created_at', 'updated_at']
+    before_action :get_application_by_token, only:[:show, :update, :destroy]
 
     def index
         apps = Application.all.page(params[:page] || 1).per(params[:limit] || 10)
@@ -7,8 +8,7 @@ class Api::ApplicationsController < ApplicationController
     end
 
     def show
-        app = Application.find_by!(token: params[:token])
-        render json: app.as_json(except: EXCEPT)
+        render json: @application.as_json(except: EXCEPT)
     end
 
     def create
@@ -21,18 +21,16 @@ class Api::ApplicationsController < ApplicationController
     end
 
     def update
-        app = Application.find_by!(token: params[:token])
-        app.name = update_application_params[:name]
-        if app.save!
-            render json: app.as_json(except: EXCEPT)
+        @application.name = update_application_params[:name]
+        if @application.save!
+            render json: @application.as_json(except: EXCEPT)
         else
-            render json: app.errors, status: :unprocessable_entity
+            render json: @application.errors, status: :unprocessable_entity
         end
     end
 
     def destroy
-        app = Application.find_by!(token: params[:token])
-        app.destroy
+        @application.destroy
         head :ok 
     end
 
@@ -44,5 +42,16 @@ class Api::ApplicationsController < ApplicationController
 
     def update_application_params
         params.require(:application).permit(:name)
+    end
+
+    def get_application_by_token
+        application_id = $redis.get(params[:token])
+        if application_id
+            @application = Application.find_by!(id: application_id) # a bit faster since It's the clustered index
+        else
+            @application = Application.find_by!(token: params[:token])
+            $redis.set(params[:token], app.id)
+            # I could've cached the entire app object, but I'm trying to minimize RAM usage since It's costy.
+        end
     end
 end

@@ -3,7 +3,7 @@ require 'bunny'
 
 namespace :consumers do
     task :messages_consumer => :environment do
-        connection = Bunny.new("amqp://guest:Guest1234@rabbitmq:5672")
+        connection = Bunny.new(ENV.fetch("RABBITMQ_URL"))
         connection.start
         channel = connection.create_channel
         queue = channel.queue("messages", durable: true, manual_ack: true)

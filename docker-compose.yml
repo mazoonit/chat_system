@@ -59,6 +59,7 @@ services:
       DATABASE_DEV_NAME: chat_system
       REDIS_URL: redis://redis:6379/1
       ELASTICSEARCH_URL: elasticsearch:9200
+      RABBITMQ_URL: amqp://guest:Guest1234@rabbitmq:5672
 
   messages_consumer:
     build: .
@@ -78,6 +79,7 @@ services:
       DATABASE_DEV_NAME: chat_system
       REDIS_URL: redis://redis:6379/1
       ELASTICSEARCH_URL: elasticsearch:9200
+      RABBITMQ_URL: amqp://guest:Guest1234@rabbitmq:5672
     
   web:
     build: .
@@ -99,6 +101,7 @@ services:
       DATABASE_DEV_NAME: chat_system
       REDIS_URL: redis://redis:6379/1
       ELASTICSEARCH_URL: elasticsearch:9200
+      RABBITMQ_URL: amqp://guest:Guest1234@rabbitmq:5672
 
 volumes:
   mysql_data_vol:

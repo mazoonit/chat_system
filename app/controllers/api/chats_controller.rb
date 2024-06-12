@@ -16,7 +16,7 @@ class Api::ChatsController < ApplicationController
         new_chat_number = ApplicationService.get_new_chat_number(@application_id, params[:application_token]).to_i
         if !new_chat_number
             logger.error("Failed to assign chat number")
-            render json: { error: "Internal Server Error." }, status: :internal_server_error
+            render json: { error: "Internal Server Error" }, status: :internal_server_error
             return
         end
 
@@ -28,7 +28,7 @@ class Api::ChatsController < ApplicationController
     end
 
     def destroy
-        chat = Chat.find_by!(application_id: @application_id, number: delete_chat_params[:number])
+        chat = Chat.find_by!(application_id: @application_id, number: params[:number])
         chat.destroy
 
         $redis.del("#{params[:token]}_#{params[:number]}_messages_count")
@@ -42,9 +42,5 @@ class Api::ChatsController < ApplicationController
     def set_application
         @application_id = ApplicationService.get_application_id_by_token(params[:application_token])
         render json: { error: "Resource not found" }, status: :not_found if !@application_id
-    end
-
-    def delete_chat_params
-        params.require(:chat).permit(:number)
     end
 end

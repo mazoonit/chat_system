@@ -21,7 +21,7 @@ class Api::ApplicationsController < ApplicationController
     end
 
     def update
-        app = Application.find_by!(token: update_application_params[:token])
+        app = Application.find_by!(token: params[:token])
         app.name = update_application_params[:name]
         if app.save!
             render json: app.as_json(except: EXCEPT)
@@ -31,7 +31,7 @@ class Api::ApplicationsController < ApplicationController
     end
 
     def destroy
-        app = Application.find_by!(token: delete_application_params[:token])
+        app = Application.find_by!(token: params[:token])
         app.destroy
         head :ok 
     end
@@ -43,10 +43,6 @@ class Api::ApplicationsController < ApplicationController
     end
 
     def update_application_params
-        params.require(:application).permit(:name, :token)
-    end
-
-    def delete_application_params
-        params.require(:application).permit(:token)
+        params.require(:application).permit(:name)
     end
 end

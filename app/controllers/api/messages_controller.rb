@@ -18,8 +18,8 @@ class Api::MessagesController < ApplicationController
     def create
         new_message_number = ChatService.get_new_message_number(params[:application_token], @application_id, @chat_id).to_i
         if !new_message_number
-            logger.error("Failed to assign chat number")
-            render json: { error: "Internal Server Error." }, status: :internal_server_error
+            logger.error("Failed to assign message number")
+            render json: { error: "Internal Server Error" }, status: :internal_server_error
             return
         end
 
@@ -31,14 +31,14 @@ class Api::MessagesController < ApplicationController
     end
 
     def update
-        message = Message.find_by!(chat_id: @chat_id, number: update_message_params[:number])
+        message = Message.find_by!(chat_id: @chat_id, number: params[:message_number])
         message.body = update_message_params[:body]
         message.save!
         render json: message.as_json(except: EXCEPT)
     end
 
     def destroy
-        message = Message.find_by!(chat_id: @chat_id, number: delete_message_params[:number])
+        message = Message.find_by!(chat_id: @chat_id, number: params[:message_number])
         message.destroy
         $redis.sadd("updated_chats", @chat_id)
         head :ok 
@@ -57,10 +57,6 @@ class Api::MessagesController < ApplicationController
     end
 
     def update_message_params
-        params.require(:message).permit(:body, :number)
-    end
-
-    def delete_message_params
-        params.require(:message).permit(:number)
+        params.require(:message).permit(:body)
     end
 end

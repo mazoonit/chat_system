@@ -22,7 +22,9 @@
 #### Further Notes on scaling approaches which came to my mind.
 ##### Database scaling
 ![image](https://github.com/mazoonit/chat_system/assets/29822073/83e35a47-f6c2-4105-8f04-28fd0f276d29)
-
+##### Redis scaling
+- Since redis is single-threaded and we're making use of his atomic nature, We may use sharding also and choose the corresponding redis instance based on the application_id using some hash_function or any other sharding method.
+- Also we may use redlock If needed to force concurrently safe state by locks.
 
 #### Endpoints
 | Method | URL                                                                              | Body                                                 | Description                                                                                                                                                     |

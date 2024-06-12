@@ -1,5 +1,5 @@
 # Chat_System @instabug
-### How to run the project ?
+### How to run the project ? (Please stick to the commands order.)
 - Install [`docker, docker-compose`](https://docs.docker.com/compose/install/).
 - Open your terminal/cmd.
 - RUN `docker-compose up --build`

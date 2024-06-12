@@ -4,7 +4,7 @@ services:
   db:
     image: mysql:latest
     volumes:
-      - mysql_data_vol10:/var/lib/mysql
+      - mysql_data_vol:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: Strong@1234 # to be replaced
       MYSQL_DATABASE: chat_system
@@ -111,7 +111,7 @@ services:
       RABBITMQ_URL: amqp://guest:Guest1234@rabbitmq:5672
 
 volumes:
-  mysql_data_vol10:
+  mysql_data_vol:
   redis_data:
   rabbitmq_dataa:
   elasticsearch_data:

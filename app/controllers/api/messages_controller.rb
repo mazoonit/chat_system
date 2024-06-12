@@ -3,9 +3,9 @@ class Api::MessagesController < ApplicationController
     EXCEPT = ['id', 'application_id', 'chat_id']
     def index
         if params[:query].present?
-            messages = Message.where(chat_id: @chat_id).search(params[:query], @chat_id)
+            messages = Message.where(chat_id: @chat_id).search(params[:query], @chat_id).page(params[:page] || 1).per(params[:limit] || 10)
         else
-            messages = Message.where(chat_id: @chat_id)
+            messages = Message.where(chat_id: @chat_id).page(params[:page] || 1).per(params[:limit] || 10)
         end      
         render json: messages.as_json(except: EXCEPT)
     end

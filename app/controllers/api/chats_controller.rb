@@ -3,7 +3,7 @@ class Api::ChatsController < ApplicationController
     EXCEPT = ['id', 'application_id']
 
     def index
-        chats = Chat.where(application_id: @application_id)
+        chats = Chat.where(application_id: @application_id).page(params[:page] || 1).per(params[:limit] || 10)
         render json: chats.as_json(except: EXCEPT)
     end
 

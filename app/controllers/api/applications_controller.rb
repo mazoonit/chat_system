@@ -1,8 +1,8 @@
 class Api::ApplicationsController < ApplicationController
     EXCEPT = ['id']
-    
+
     def index
-        apps = Application.all
+        apps = Application.all.page(params[:page] || 1).per(params[:limit] || 10)
         render json: apps.as_json(except: EXCEPT)
     end
 

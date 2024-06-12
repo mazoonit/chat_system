@@ -2,8 +2,8 @@
 ### How to run the project ?
 - Install [`docker, docker-compose`](https://docs.docker.com/compose/install/).
 - Open your terminal/cmd.
-- Run `docker-compose run web rake db:migrate`
 - RUN `docker-compose up --build`
+- Run `docker-compose run web rake db:migrate`
 - You can access It from `http://localhost:3000` through `postman`,`insomnia`, `browser`, ... etc (You can find endpoints table [here](#Endpoints))
 
 ### Solution Overview

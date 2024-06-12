@@ -5,7 +5,7 @@ class RabbitmqConnection
     end
     
     def establish_connection
-        @active_connection = Bunny.new("amqp://guest:Guest1234@rabbitmq:5672")
+        @active_connection = Bunny.new(ENV.fetch("RABBITMQ_URL"))
         @active_connection.start
         @active_channel = @active_connection.create_channel
 
@@ -28,5 +28,9 @@ class RabbitmqConnection
     
     def connected?
         @active_connection&.connected?
+    end
+
+    def close
+        @active_connection.close
     end
 end

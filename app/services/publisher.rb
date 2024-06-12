@@ -6,6 +6,6 @@ class Publisher
       exchange = channel.direct("#{queue_name}_exchange", DEFAULT_OPTIONS)
       queue = channel.queue(queue_name, DEFAULT_OPTIONS)
       queue.bind(exchange, :routing_key => queue.name) 
-      exchange.publish(payload, routing_key: queue.name)
+      exchange.publish(payload, routing_key: queue.name, persistent: true)
     end
 end

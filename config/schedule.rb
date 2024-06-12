@@ -11,7 +11,7 @@ set :environment, 'development'
 set :output, "#{path}/log/cron.log"
 ENV.each { |k, v| env(k, v) }
 
-every '* * * * *' do
+every 10.minutes do
     rake "update_counters"
 end
 #

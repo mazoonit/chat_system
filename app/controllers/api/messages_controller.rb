@@ -23,7 +23,7 @@ class Api::MessagesController < ApplicationController
             return
         end
 
-        new_message = Message.new(number: new_message_number, body: params[:body], chat_id: @chat_id)
+        new_message = Message.new(number: new_message_number, body: create_message_params[:body], chat_id: @chat_id)
 
         Publisher.publish(queue_name: "messages", payload: new_message.to_json)
 
@@ -31,14 +31,14 @@ class Api::MessagesController < ApplicationController
     end
 
     def update
-        message = Message.find_by!(chat_id: @chat_id, number: params[:message_number])
-        message.body = params[:body]
+        message = Message.find_by!(chat_id: @chat_id, number: update_message_params[:number])
+        message.body = update_message_params[:body]
         message.save!
         render json: message.as_json(except: EXCEPT)
     end
 
     def destroy
-        message = Message.find_by!(chat_id: @chat_id, number: params[:message_number])
+        message = Message.find_by!(chat_id: @chat_id, number: delete_message_params[:number])
         message.destroy
         $redis.sadd("updated_chats", @chat_id)
         head :ok 
@@ -49,6 +49,18 @@ class Api::MessagesController < ApplicationController
     def set_chat
         @application_id = ApplicationService.get_application_id_by_token(params[:application_token])
         @chat_id = ChatService.get_chat_id(params[:application_token], @application_id, params[:chat_number])
-        render json: { error: "Resource not found" }, status: :not_found if !@application_id
+        render json: { error: "Resource not found" }, status: :not_found if !@application_id || !@chat_id
+    end
+
+    def create_message_params
+        params.require(:message).permit(:body)
+    end
+
+    def update_message_params
+        params.require(:message).permit(:body, :number)
+    end
+
+    def delete_message_params
+        params.require(:message).permit(:number)
     end
 end

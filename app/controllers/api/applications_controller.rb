@@ -1,5 +1,5 @@
 class Api::ApplicationsController < ApplicationController
-    EXCEPT = ['id']
+    EXCEPT = ['id', 'created_at', 'updated_at']
 
     def index
         apps = Application.all.page(params[:page] || 1).per(params[:limit] || 10)
@@ -12,7 +12,7 @@ class Api::ApplicationsController < ApplicationController
     end
 
     def create
-        app = Application.new(name: params[:name])
+        app = Application.new(name: create_application_params[:name])
         if app.save!
             render json: app.as_json(except: EXCEPT)
         else
@@ -21,8 +21,8 @@ class Api::ApplicationsController < ApplicationController
     end
 
     def update
-        app = Application.find_by!(token: params[:token])
-        app.name = params[:name]
+        app = Application.find_by!(token: update_application_params[:token])
+        app.name = update_application_params[:name]
         if app.save!
             render json: app.as_json(except: EXCEPT)
         else
@@ -31,8 +31,22 @@ class Api::ApplicationsController < ApplicationController
     end
 
     def destroy
-        app = Application.find_by!(token: params[:token])
+        app = Application.find_by!(token: delete_application_params[:token])
         app.destroy
         head :ok 
+    end
+
+    private
+
+    def create_application_params
+        params.require(:application).permit(:name)
+    end
+
+    def update_application_params
+        params.require(:application).permit(:name, :token)
+    end
+
+    def delete_application_params
+        params.require(:application).permit(:token)
     end
 end

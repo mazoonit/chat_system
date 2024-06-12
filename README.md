@@ -12,7 +12,7 @@
 #### Handling Concurrency, and redis presistance trade-offs.
 ![image](https://github.com/mazoonit/chat_system/assets/29822073/a9982a8b-869a-4284-8c0b-9fbd04d1e6ce)
 - Since We can't rely on mysql getting the chat's max number If there's no data in redis (Because there might be some newly inserted chats in the queue and not inserted into mysql yet) so, I decided to carefully use redis's presistance feature without decreasing the performance drastically.
-- 
+
 #### Application Token Storage Optimization
 - I generated a uuid token using `SecureRandom` in rails.
 - Then used `mysql-binuuid-rails` Gem to store the uuid token as binary value in mysql.

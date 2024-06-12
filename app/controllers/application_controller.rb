@@ -16,6 +16,7 @@ class ApplicationController < ActionController::API
     end
 
     def handle_parameter_missing(exception)
-      render json: { error: exception.message }, status: :unprocessable_entity
+      logger.error(exception)
+      render json: { error: exception.message }, status: :bad_request
     end  
 end

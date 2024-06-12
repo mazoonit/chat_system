@@ -50,7 +50,7 @@ class Api::ApplicationsController < ApplicationController
             @application = Application.find_by!(id: application_id) # a bit faster since It's the clustered index
         else
             @application = Application.find_by!(token: params[:token])
-            $redis.set(params[:token], app.id)
+            $redis.set(params[:token], @application.id)
             # I could've cached the entire app object, but I'm trying to minimize RAM usage since It's costy.
         end
     end
